@@ -1,5 +1,6 @@
 /* * * *  V A R I A B L E S * * * */
-let x, stringSum, stringM, suma, sM, eM, inf, sup;
+/* Declarades o inicialitzades aquí per ser accedides des de qualsevol lloc de l'arxiu. (Scope global) */
+let x, stringSum, stringM, suma, sM, eM, inf, sup, dif;
 
 // Settings inicials
 const qN = 2; //quantitat de números a preguntar
@@ -8,8 +9,8 @@ const rMax = 50; // Rang màxim
 
 // Matrius
 const M = []; // Matriu de números introduïts
-// const Pa = []; // Matriu booleana de parells (amb 1 i 0)
-// const Pr = []; // Matriu booleana de primers (amb 1 i 0)
+const Pa = []; // Matriu booleana de parells (amb 1 i 0)
+const Pr = []; // Matriu booleana de primers (amb 1 i 0)
 const rangM = []; // Matriu rang de números entre el mínim valor introduït i el màximi valor introduït. (Exercicis 4, 5 i 6). És ascendent
 let invRangM = []; // Matriu rang de números entre el mínim valor introduït i el màximi valor introduït. (Exercicis 4, 5 i 6). És ascendent
 let rangMPar = []; // Submatriu ascendent de parells de rangMar
@@ -19,8 +20,10 @@ let invRangMSen = []; // Submatriu descendent de senars d'invRangMar
 let countN = 0; // Comptador de Números introduits
 let countD = 0; // Comptador de divisors
 let iM = 0; // Índex de la matriu de números
-// let iPa = 0; // Índex de lamatriu de parells
-// let iPr = 0; // Índex de la matriu de primers
+let iPa = 0; // Índex de lamatriu de parells
+let iPr = 0; // Índex de la matriu de primers
+let iRangM = 0; // Índex de rangM
+let iInvRangM = 0; // Índex de rangM
 
 // Missatges d'Interfície
 let msg1 = "Introdueix un número entre " + rMin + " i " + rMax;
@@ -34,6 +37,7 @@ let msg3 = ""; // Per la "primorositat": Exercici 2
 let msg4a, msg4b = ""; // Per a la "primorositat: Exercici 2"
 let msg4 = ""; // Per la "paritat": Exercici 3
 let msg5 = ""; // Per als Exercicis 4, 5 I 6
+/* * * * * FI VARIABLES * * *  */
 
 
 /* * * * F U N C I O N S * * * */
@@ -42,18 +46,18 @@ function reset() { //Funció resetejadora
     countN = 0;
     countD = 0;
     iM = 0; // Índex de la matriu de números
-    // iPa = 0; // Índex de lamatriu de parells
-    // iPr = 0; // Índex de la matriu de primers
-
-
+    iPa = 0; // Índex de lamatriu de parells
+    iPr = 0; // Índex de la matriu de primers
+    iRangM = 0; // Índex de rangM
+    iInvRangM = 0; // Índex de rangM
     msg2 = "";
     // ELIMINACIÓ DE VALORS DE VARIABLES
     suma, stringSum = null;
     // BUIDATGE DE MATRIUS M, Pa i Pr
     while (M.length > 0) { //buidar les matrius d'ús, que a més són d'igual longitud
         M.pop();
-        // Pa.pop();
-        // Pr.pop();
+        Pa.pop();
+        Pr.pop();
         rangM.pop();
         rangMPar.pop();
         invRangM.pop();
@@ -62,7 +66,6 @@ function reset() { //Funció resetejadora
 }
 
 // VALIDACIÓ DE VALORS INTRODUÏTS
-//TODO: que sigui sencer
 function v(n) { //Ha de ser numèric i estar en el rang de rMin a rMax.
     if (isNaN(n) || n < rMin || n > rMax) {
         return false;
@@ -142,24 +145,32 @@ function investigar() {
     M.forEach(element => {
         /* Comprova si és parell o no */
         if (isPa(element)) {
+            console.log(element + " és parell");
             Pa[iPa] = 1;
         } else {
+            console.log(element + " és senar");
             Pa[iPa] = 0;
         }
         iPa++;
 
         /* Comprova si és primer o no */
         if (isPr(element)) {
+            console.log(element + " és primer");
             Pr[iPr] = 1;
         } else {
+            console.log(element + " no és primer");
             Pr[iPr] = 0;
         }
         iPr++;
         countD = 0; //resetejo el comptador de divisors pel següent número
     });
 }
+/* * * * * * * * * * * * * * * * */
+
 
 /* * * * * O U T P U T * * * *  */
+// Funcions per el·laborar missatges de sortida
+
 function sumar() {
     /* Exercici 1 */
     stringSum = M.join("+"); // En forma d'string emmagatzemo la operació matemàtica + dels números emmagatzemats a M
@@ -170,7 +181,6 @@ function sumar() {
 
 function outPrimorositat() {
     /* Exercici 2 */
-    //TODO: MILLORAR ELABORACIÓ DEL MISSATGE
     const subPr = M.filter(element => (isPr(element))); // Primers
     const subPrUniq = [...new Set(subPr)]; // Primers únics
 
@@ -189,7 +199,6 @@ function outPrimorositat() {
 
 function outParitat() {
     /* Exercici 3 */
-    //TODO: MILLORAR ELABORACIÓ DEL MISSATGE
     const subPa = M.filter(element => (isPa(element))); // Primers
     const subPaUniq = [...new Set(subPa)]; // Primers únics
 
@@ -213,17 +222,30 @@ function outUpDown() {
     direcc = (sM == eM) ? "equal" : (sM < eM) ? "up" : "down";
     inf = Math.min(...M);
     sup = Math.max(...M);
+    dif = sup - inf; // Potser no fa falta
 
     for (a = inf; a <= sup; a++) {
         rangM.push(a);
     }
     invRangM = [...rangM].reverse();
-    /* Operador (spread) per evitar alterar rangM ja que reverse() actua per referència directa a la memòria  */
+    /* Faig servir l'operador de propagació (spread) per evitar que rangM s'inverteixi ja que el mètode reverse() actua per referència directa a la memòria  */
 
     rangMPar = rangM.filter(element => (element % 2 == 0));
     invRangMSen = invRangM.filter(element => (element % 2 != 0));
 
     msg5 = direcc == "equal" ? inf : direcc == "up" ? rangMPar : invRangMSen;
+    console.log("Exercicis 4, 5 i 6: [" + msg5.join(" ") + "]");
+
+    console.log("rangM: " + rangM);
+    console.log("rangMPar: " + rangMPar);
+    console.log("invRangM: " + invRangM);
+    console.log("invRangMSen: " + invRangMSen);
+    console.log("Inferior: " + inf);
+    console.log("Superior: " + sup);
+    console.log("Diferència: " + dif);
+    console.log("Direcció: " + direcc);
+
+
 }
 
 
@@ -231,17 +253,18 @@ function outUpDown() {
 function start() {
     reset();
     r();
-    // investigar();
+    investigar();
     sumar();
     outPrimorositat();
     outParitat();
     outUpDown()
 
-    // outputs
+    // Primer Exercici
     console.log("Exercici 1: " + msg2);
     console.log("Exercici 2: " + msg3);
     console.log("Exercici 3: " + msg4);
-    console.log("Exercicis 4, 5 i 6: [" + msg5.join(" ") + "]");
+    // console.log("Matriu Parells: " + Pa);
+    // console.log("Matriu Primers: " + Pr);
 }
 
 // Javascript no obstructiu
