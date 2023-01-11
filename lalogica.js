@@ -1,250 +1,186 @@
-/* * * *  V A R I A B L E S * * * */
-let x, stringSum, stringM, suma, sM, eM, inf, sup;
-
-// Settings inicials
+/* ****** S E T T I N G S ****** */
 const qN = 2; //quantitat de números a preguntar
 const rMin = 1; // Rang mínim
 const rMax = 50; // Rang màxim
+/* ****** E N D - S E T T I N G S ****** */
 
-// Matrius
-const M = []; // Matriu de números introduïts
-// const Pa = []; // Matriu booleana de parells (amb 1 i 0)
-// const Pr = []; // Matriu booleana de primers (amb 1 i 0)
-const rangM = []; // Matriu rang de números entre el mínim valor introduït i el màximi valor introduït. (Exercicis 4, 5 i 6). És ascendent
-let invRangM = []; // Matriu rang de números entre el mínim valor introduït i el màximi valor introduït. (Exercicis 4, 5 i 6). És ascendent
-let rangMPar = []; // Submatriu ascendent de parells de rangMar
-let invRangMSen = []; // Submatriu descendent de senars d'invRangMar
+/* ****** V A R I A B L E S ****** */
+// global scope
+let x; // variable de recollida prompt
+let suma; // suma de valors introduïts
+let lM; // longitud de M
 
-// Comptadors i cursors
-let countN = 0; // Comptador de Números introduits
-let countD = 0; // Comptador de divisors
-let iM = 0; // Índex de la matriu de números
-// let iPa = 0; // Índex de lamatriu de parells
-// let iPr = 0; // Índex de la matriu de primers
+//arrays
+const M = []; // matriu on s'emmagatzemen els valors introduïts per prompt
+let subPriM = []; // submatriu amb els primers d'M
+let subNoPriM = []; // submatriu de no primers d'M
+let subParM = []; //submatriu amb els elements parells d'M
+let subNoParM = []; // submatriu de no parells d'M
 
-// Missatges d'Interfície
-let msg1 = "Introdueix un número entre " + rMin + " i " + rMax;
-let msg1b = "Ara introdueix un altre número entre  " + rMin + " i " + rMax;
-let error = "Valor introduït incorrecte. Has d'introduïr un número entre 1 i 50.";
+// counters
+let countP; // comptador de prompts i cursor d'M
+let countD; // comptador de divisors imparells superiors a 3 fins arribar a n
 
-// Missatges de Sortida
-let msg2 = ""; // Per a la suma: Exercici 1
-let msg3a, msg3b = ""; // Per a la "primorositat: Exercici 2"
-let msg3 = ""; // Per la "primorositat": Exercici 2
-let msg4a, msg4b = ""; // Per a la "primorositat: Exercici 2"
-let msg4 = ""; // Per la "paritat": Exercici 3
-let msg5 = ""; // Per als Exercicis 4, 5 I 6
+// prompt messages
+let pMsg1 = `Si us plau. Introdueix un nombre sencer entre ${rMin} i ${rMax}.`;
+let pMsg2 = `Molt bé. I ara un altre nombre sencer entre ${rMin} i ${rMax}.`;
 
+// alert error messages
+let error1 = `No has escrit un nombre sencer entre ${rMin} i ${rMax}.\n`;
 
-/* * * * F U N C I O N S * * * */
-function reset() { //Funció resetejadora
-    //VALORS INICIALS
-    countN = 0;
+// output messages
+let msg1 = ""; // Exercici 1
+let msg2 = ""; // Exercici 2
+let msg3 = ""; // Exercici 3
+let msg4 = ""; // Exercici 4
+let msg5 = ""; // Exercici 5
+let msg6 = ""; // Exercici 6
+
+/* ****** E N D - V A R I A B L E S ****** */
+
+/* ****** F U N C T I O N S ****** */
+/* -   - R E S E T -   - */
+function reset() {
+    console.clear();
+    countP = 0;
     countD = 0;
-    iM = 0; // Índex de la matriu de números
-    // iPa = 0; // Índex de lamatriu de parells
-    // iPr = 0; // Índex de la matriu de primers
-
-
-    msg2 = "";
-    // ELIMINACIÓ DE VALORS DE VARIABLES
-    suma, stringSum = null;
-    // BUIDATGE DE MATRIUS M, Pa i Pr
-    while (M.length > 0) { //buidar les matrius d'ús, que a més són d'igual longitud
+    while (M.length > 0) {
         M.pop();
-        // Pa.pop();
-        // Pr.pop();
-        rangM.pop();
-        rangMPar.pop();
-        invRangM.pop();
-        invRangMSen.pop();
+        // Aprofitem per buidar les següents encara que tinguin length inferior
+        subPriM.pop();
+        subNoPriM.pop();
+        subParM.pop();
+        subNoParM.pop();
     }
 }
 
-// VALIDACIÓ DE VALORS INTRODUÏTS
-//TODO: que sigui sencer
-function v(n) { //Ha de ser numèric i estar en el rang de rMin a rMax.
-    if (isNaN(n) || n < rMin || n > rMax) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-// INTRODUCCIÓ DE VALORS
-function r(m) { //Funció de lectura
-    while (countN <= (qN - 1)) { // Mentre no introdueixi més números dels establerts amb qN
-
-        if (m !== null) { // Si li passo un missatge d'argument
-            m = countN == 0 ? msg1 : msg1b; // escollirà el missatge msg1 la primera vegada i el missatge msg1b les següents
-        } else {
-            m = msg1; // Si NO li passo un missatge com a argument llavors escollirà msg1
-        }
-
+/* -   - I N P U T -   - */
+function r(m = pMsg1) { // obté valor, "read"
+    while (countP < qN) {
+        m = countP < 1 ? pMsg1 : pMsg2
         x = Number(prompt(m));
-        /* És la variable on emmagatzemem el valor introduït amb el prompt.
-        Li posso number per passar-ho a número ja que prompt fabrica una variable de tipus string */
-
-
-        if (v(x)) { // Si el valor introduït és validat
-            M.push(x); // ... s'afegirà al final de la matriu
-            countN++; // ... i afegim una unitat al comptador de valors introduïts
-        } else { // Però si el valor introduït no és validat
-            m = null; // ... llavors esborrem el missatge
-            alert(error); // ... i mostrem amb un alert l'error amb el missatge de la variable error
-        } // ... i en aquest cas no avancem el comptador de números introduïts que controla el bucle
-        /* Exercici 7 */
-
+        if (v(x)) {
+            iM(x);
+            countP++; //Si valida avença
+        } else {
+            m = pMsg1; // Si no valida mostra el primer missatge
+        }
     }
 }
 
-// QUASI-CRIBA D'ERATOSTENES PER COMPROVAR SI UN NÚMERO ÉS PRIMER
-// Funcions preliminars
-function is1(n) { // Comprova si el número és 1
-    return n == 1 ? true : false;
-}
-
-function is2o3(n) { // Comprova si el número és 2 o 3
-    return (n == 2 || n == 3) ? true : false;
-}
-
-function isPa(n) { // Comprova si el número és parell per números superiors o iguals a 2
-    if (n >= 2 && n % 2 == 0) {
-        return true;
-    } else {
+function v(n) { // verifica valor
+    let isInt = (n == parseInt(n)) ? true : false;
+    let isMenor = n < rMin;
+    let isMajor = n > rMax;
+    if (isNaN(n) || !isInt || isMenor || isMajor) {
+        oError(error1);
         return false;
+    } else {
+        return true;
     }
 }
 
-function isPr(n) { // Comprova si el número és primer
+function iM(n) { // introdueix valor a M
+    M[countP] = n;
+}
 
-    if (is2o3(n)) { //Si és 2, o bé 3 ...
-        return true; // llavors segur que és primer, per tant fem un return true. En retornar valor s'atura la funció i no segueix avaluant.
-    } else if (is1(n) || isPa(n)) { // Si és 1 o és parell, sense ser 2, ...
-        return false; // ... llavors NO és primer, i li fem return false. En retornar un valor s'atura la funció i no segueix avaluant
-    } else { // Si no és 1, 2, 3 o parell ...
-        for (i = 3; i <= n; i = i + 2) {
-            /* Avalua els números imparells entre 3 i el nostre número.
-            D'aquesta manera faig un bucle el més curt possible
-            */
+/* -   - P R O C E S S -   - */
+function isPar(n) { // verifica si n és parell
+    return (n % 2 == 0) ? true : false;
+}
+
+function isPri(n) { // verifica si és primer
+    if (n == 1 || (n != 2 && isPar(n))) {
+        return false;
+    } // no
+    else if (n == 2) {
+        return true;
+    } // sí
+    else {
+        for (i = 3; i < n; i = i + 2) { // verifica si troba algun divisor senar des de 3 fins arribar a ell només (els superiors no podrien ser divisors)
             if (n % i == 0) {
-                countD = 1;
-                return false;
-                /* Només que trobi un divisor (en aquest rang de 3 fins un número abans del nostre) ja no és primer.
-                No cal seguir ja amb el bucle i l'aturem amb return false */
+                countD++;
             }
-            return countD == 0 ? true : false;
         }
+        return countD == 0 ? true : false; // Si no troba divisors serà primer, si en troba llavors no
     }
 }
 
-function investigar() {
-    M.forEach(element => {
-        /* Comprova si és parell o no */
-        if (isPa(element)) {
-            Pa[iPa] = 1;
-        } else {
-            Pa[iPa] = 0;
-        }
-        iPa++;
-
-        /* Comprova si és primer o no */
-        if (isPr(element)) {
-            Pr[iPr] = 1;
-        } else {
-            Pr[iPr] = 0;
-        }
-        iPr++;
-        countD = 0; //resetejo el comptador de divisors pel següent número
-    });
+function sumar(n) { // suma
+    suma = eval(M.join("+"));
 }
 
-/* * * * * O U T P U T * * * *  */
-function sumar() {
-    /* Exercici 1 */
-    stringSum = M.join("+"); // En forma d'string emmagatzemo la operació matemàtica + dels números emmagatzemats a M
-    suma = eval(stringSum); // Amb la funció eval realitzo la operació matemàtica definida com a string a stringSum
-    msg2 = "La suma de " + M.join(" + ") + " és: " + suma + "."; // Defineixo el missatge msg2
-    return suma;
+function analitzar(n) { // Analitza la matriu
+    lM = M.length;
+    subPriM = M.filter(element => isPri(element)); // submatriu de primers
+    subNoPriM = M.filter(element => !isPri(element)); // submatriu de no primers
+    subParM = M.filter(element => isPar(element)); // submatriu de parells
+    subNoParM = M.filter(element => !isPar(element)); // submatriu de senars
 }
 
-function outPrimorositat() {
-    /* Exercici 2 */
-    //TODO: MILLORAR ELABORACIÓ DEL MISSATGE
-    const subPr = M.filter(element => (isPr(element))); // Primers
-    const subPrUniq = [...new Set(subPr)]; // Primers únics
-
-    const subPrN = M.filter(element => (!isPr(element))); // No Primers
-    const subPrUniqN = [...new Set(subPrN)]; // No Primers Unics
-
-    let totalitat = subPrUniq.length == M.length ? true : false;
-    let totalitatN = subPrUniqN.length == M.length ? true : false;
-    let plural = subPrUniq.length > 1 ? true : false;
-    let pluralN = subPrUniqN.length > 1 ? true : false;
-    let cap = subPrUniq.length == 0 ? true : false;
-    msg3a = cap == true ? `Cap dels números que has introduït (${M.join(' i ')}) és primer.` : totalitat == true ? `Tots els números que has introduït (${subPrUniq.join(" i ")}) són primers.` : plural == false ? `Només ${subPrUniq.toString()} és primer.` : `Els números que has introduït (${subPrUniq.join(" i ")}) són primers.`;
-    msg3b = pluralN == false ? ` El número que has introduït (${subPrUniqN.toString()}) no és primer.` : totalitatN == false ? ` I dels números següents que has introduït (${subPrUniqN.join(" i ")}) cap és primer.` : ``;
-    msg3 = msg3a + msg3b;
+function p() { // Funció directriu de processos
+    sumar(M);
+    analitzar(M);
 }
 
-function outParitat() {
-    /* Exercici 3 */
-    //TODO: MILLORAR ELABORACIÓ DEL MISSATGE
-    const subPa = M.filter(element => (isPa(element))); // Primers
-    const subPaUniq = [...new Set(subPa)]; // Primers únics
-
-    const subPaN = M.filter(element => (!isPa(element))); // No Primers
-    const subPaUniqN = [...new Set(subPaN)]; // No Primers Unics
-
-    let totalitat = subPaUniq.length == M.length ? true : false;
-    let totalitatN = subPaUniqN.length == M.length ? true : false;
-    let plural = subPaUniq.length > 1 ? true : false;
-    let pluralN = subPaUniqN.length > 1 ? true : false;
-    let cap = subPaUniq.length == 0 ? true : false;
-    msg4a = cap == true ? `Cap dels números que has introduït (${M.join(' i ')}) és parell.` : totalitat == true ? `Tots els números que has introduït (${subPaUniq.join(" i ")}) són parells.` : plural == false ? `Només ${subPaUniq.toString()} és parell.` : `Els números que has introduït (${subPaUniq.join(" i ")}) són parells.`;
-    msg4b = pluralN == false ? ` El número que has introduït (${subPaUniqN.toString()}) és senar.` : totalitatN == false ? ` I dels números següents que has introduït (${subPaUniqN.join(" i ")}) són senars.` : ``;
-    msg4 = msg4a + msg4b;
+/* -   - O U T P U T -   - */
+function oError(e) { // Mostra l'error que li passem per paràmetre
+    alert(e);
 }
 
-function outUpDown() {
-    /* Exercicis 4,5 i 6 */
-    sM = M[0]; // Primer número introduït
-    eM = M[(M.length - 1)]; // Darrer número intruduït
-    direcc = (sM == eM) ? "equal" : (sM < eM) ? "up" : "down";
-    inf = Math.min(...M);
-    sup = Math.max(...M);
+function compMsgs() { // Composició de missatges d'Output
+    // Exercici 1
+    msg1 = `La suma és: ${suma}. \n`;
 
-    for (a = inf; a <= sup; a++) {
-        rangM.push(a);
-    }
-    invRangM = [...rangM].reverse();
-    /* Operador (spread) per evitar alterar rangM ja que reverse() actua per referència directa a la memòria  */
+    // Exercici 2
+    if (subPriM.length == lM) { msg2 = ``; }
 
-    rangMPar = rangM.filter(element => (element % 2 == 0));
-    invRangMSen = invRangM.filter(element => (element % 2 != 0));
 
-    msg5 = direcc == "equal" ? inf : direcc == "up" ? rangMPar : invRangMSen;
+
+    // Sortida per consola
+    console.log(msg1);
 }
 
+/* ***** E N D - F U N C T I O N S ***** */
 
-// Funció directriu
-function start() {
+
+
+
+/* ****** M A I N ****** */
+function main() {
     reset();
     r();
-    // investigar();
-    sumar();
-    outPrimorositat();
-    outParitat();
-    outUpDown()
+    p();
+    // visorDEV();
+    compMsgs();
+}
+/* ****** E N D - M A I N ***** */
 
-    // outputs
-    console.log("Exercici 1: " + msg2);
-    console.log("Exercici 2: " + msg3);
-    console.log("Exercici 3: " + msg4);
-    console.log("Exercicis 4, 5 i 6: [" + msg5.join(" ") + "]");
+/* ***** I N T E R A C T I V I T A T ***** */
+window.onload = function () {
+    document.getElementById("start").onclick = main;
 }
 
-// Javascript no obstructiu
-window.onload = function () {
-    document.getElementById("start").onclick = start;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -   - D E V - T E S T S -   - */
+function visorDEV() {
+    console.log("x: " + x);
+    console.log("Matriu: " + M);
+    console.log("Suma: " + suma);
+    console.log("Matriu Primers: ", subPriM);
+    console.log("Matriu No Primers: ", subNoPriM);
 }
