@@ -2,7 +2,8 @@
 const qN = 2; //quantitat de números a preguntar
 const rMin = 1; // Rang mínim
 const rMax = 50; // Rang màxim
-/* ****** E N D - S E T T I N G S ****** */
+
+
 
 /* ****** V A R I A B L E S ****** */
 // global scope
@@ -14,7 +15,6 @@ let eM; // darrer element d'M
 let inf; // element més petit d'M
 let sup; // element més gran d'M
 let direcc; // direcció per representar resultats d'exercici 4, 5 i 6
-
 
 //arrays
 const M = []; // matriu on s'emmagatzemen els valors introduïts per prompt
@@ -46,7 +46,7 @@ let msg3 = ""; // Exercici 3
 let msg4 = ""; // Exercici 4
 let msgTotal = ""; // Missatge complert
 
-/* ****** E N D - V A R I A B L E S ****** */
+
 
 /* ****** F U N C T I O N S ****** */
 /* -   - R E S E T -   - */
@@ -198,8 +198,6 @@ function oAlert() {
     alert(msgTotal);
 }
 
-
-
 /* -   - M A I N -   - */
 function main() { //Funció d'entrada
     reset();
@@ -230,6 +228,7 @@ function visorDEV() {
     console.log("Matriu No Primers: ", subNoPriM);
     console.log(sM, eM, inf, sup);
 }
+
 
 
 /* ***** I N T E R A C T I V I T A T ***** */
