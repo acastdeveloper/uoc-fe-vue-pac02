@@ -1,5 +1,5 @@
 /* ****** S E T T I N G S ****** */
-const qN = 2; //quantitat de números a preguntar
+const qN = 6; //quantitat de números a preguntar
 const rMin = 1; // Rang mínim
 const rMax = 50; // Rang màxim
 
@@ -62,6 +62,15 @@ function reset() {
         subParM.pop();
         subNoParM.pop();
     }
+
+    while (rangM.length > 0) {
+        rangM.pop();
+        invRangM.pop();
+        rangMPar.pop();
+        invRangMSen.pop();
+    }
+
+
 }
 
 /* -   - I N P U T -   - */
@@ -168,7 +177,7 @@ function compMsgs() { // Composició de missatges d'Output
     else { msg2a = `Els nombres [${subPriM}] són primers`; }
 
     if (subNoPriM.length == 1) { msg2b = ` i el nombre [${subNoPriM}] no és primer.`; }
-    else if (subNoPriM.length > 1) { msg2b = ` i els nombres [${subNoPriM}] no són primers.`; }
+    else if (subNoPriM.length > 1 && subPriM.length !== 0) { msg2b = ` i els nombres [${subNoPriM}] no són primers.`; }
     msg2 = msg2a + msg2b;
 
     // Exercici 3
@@ -180,7 +189,7 @@ function compMsgs() { // Composició de missatges d'Output
     else { msg3a = `Els nombres [${subParM}] són parells`; }
 
     if (subNoParM.length == 1) { msg3b = ` i el nombre [${subNoParM}] és senar.`; }
-    else if (subNoParM.length > 1) { msg3b = ` i els nombres [${subNoParM}] són senars.`; }
+    else if (subNoParM.length > 1 && subParM.length !== 0) { msg3b = ` i els nombres [${subNoParM}] són senars.`; }
     msg3 = msg3a + msg3b;
 
     // Exercicis 4, 5 i 6
@@ -205,33 +214,41 @@ function main() { //Funció d'entrada
     p();
     compMsgs();
     oAlert();
-    // visorDEV();
+    visorDEV();
 }
 
 /* -   - D E V - T E S T S -   - */
 function visorDEV() {
-    // Sortida per consola
+    //    Sortida per consola
     console.log(`Has introduït: ${M}`);
-    console.log("\n\n");
     console.log("[Exercici 1]: " + msg1);
-    console.log("\n\n");
     console.log("[Exercici 2]: " + msg2);
-    console.log("\n\n");
     console.log("[Exercici 3]: " + msg3);
-    console.log("\n\n");
-    console.log("[Exercicis 4, 5 i 6]: " + msg4);
 
+
+    console.log("[Exercicis 4, 5 i 6]: " + msg4);
     console.log("x: " + x);
     console.log("Matriu: " + M);
     console.log("Suma: " + suma);
     console.log("Matriu Primers: ", subPriM);
     console.log("Matriu No Primers: ", subNoPriM);
     console.log(sM, eM, inf, sup);
+
+    // Per comprovar que es resetegen
+    console.log("Matriu números introduïts: ", M);
+    console.log("Matriu rang: ", rangM);
+    console.log("Matriu rang inversa: ", invRangM);
+    console.log("Matriu rang inversa: ", invRangM);
+    console.log("Matriu rang parells", rangMPar);
+    console.log("Matriu rang inversa senars", invRangMSen);
 }
 
 
 
 /* ***** I N T E R A C T I V I T A T ***** */
-window.onload = function () {
-    document.getElementById("start").onclick = main;
-}
+// window.onload = function () {
+//     document.getElementById("start").onclick = main;
+// }
+
+const button = document.querySelector("#start");
+button.addEventListener("click", main, true);
