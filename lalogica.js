@@ -1,5 +1,5 @@
 /* ****** S E T T I N G S ****** */
-const qN = 6; //quantitat de números a preguntar
+const qN = 2; //quantitat de números a preguntar
 const rMin = 1; // Rang mínim
 const rMax = 50; // Rang màxim
 
